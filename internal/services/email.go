@@ -3,6 +3,7 @@ package services
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -32,9 +33,11 @@ var (
 func init() {
 	RegisterProvider("smtp", func(cfg *config.Config) (EmailSender, error) {
 		return &SMTPSender{
-			Host: cfg.SMTPHost,
-			Port: cfg.SMTPPort,
-			From: cfg.SMTPFrom,
+			Host:     cfg.SMTPHost,
+			Port:     cfg.SMTPPort,
+			Username: cfg.SMTPUsername,
+			Password: cfg.SMTPPassword,
+			From:     cfg.SMTPFrom,
 		}, nil
 	})
 
@@ -108,18 +111,77 @@ func AvailableProviders() []string {
 	return keys
 }
 
-// --- 1. Mailpit / Standard SMTP Implementation ---
+// --- 1. Mailpit / Standard & SSL SMTP Implementation ---
 type SMTPSender struct {
-	Host string
-	Port string
-	From string
+	Host     string
+	Port     string
+	Username string
+	Password string
+	From     string
 }
 
 func (s *SMTPSender) Send(to string, subject string, htmlBody string) error {
 	addr := fmt.Sprintf("%s:%s", s.Host, s.Port)
 	msg := fmt.Sprintf("From: %s\r\nTo: %s\r\nSubject: %s\r\nMIME-version: 1.0;\r\nContent-Type: text/html; charset=UTF-8;\r\n\r\n%s", s.From, to, subject, htmlBody)
 
-	err := smtp.SendMail(addr, nil, s.From, []string{to}, []byte(msg))
+	var auth smtp.Auth
+	if s.Username != "" {
+		auth = smtp.PlainAuth("", s.Username, s.Password, s.Host)
+	}
+
+	// Implicit SSL/TLS mode (Standard for SMTP Port 465)
+	if s.Port == "465" {
+		tlsConfig := &tls.Config{
+			InsecureSkipVerify: false,
+			ServerName:         s.Host,
+		}
+
+		conn, err := tls.Dial("tcp", addr, tlsConfig)
+		if err != nil {
+			return fmt.Errorf("ssl tls dial failed: %w", err)
+		}
+		defer conn.Close()
+
+		client, err := smtp.NewClient(conn, s.Host)
+		if err != nil {
+			return fmt.Errorf("smtp client creation failed: %w", err)
+		}
+		defer client.Quit()
+
+		if auth != nil {
+			if err := client.Auth(auth); err != nil {
+				return fmt.Errorf("smtp auth failed: %w", err)
+			}
+		}
+
+		if err := client.Mail(s.From); err != nil {
+			return fmt.Errorf("smtp mail command failed: %w", err)
+		}
+		if err := client.Rcpt(to); err != nil {
+			return fmt.Errorf("smtp rcpt command failed: %w", err)
+		}
+
+		w, err := client.Data()
+		if err != nil {
+			return fmt.Errorf("smtp data command failed: %w", err)
+		}
+
+		_, err = w.Write([]byte(msg))
+		if err != nil {
+			return fmt.Errorf("smtp write body failed: %w", err)
+		}
+
+		err = w.Close()
+		if err != nil {
+			return fmt.Errorf("smtp close data writer failed: %w", err)
+		}
+
+		slog.Info("Successfully sent email via SMTP SSL (Port 465)", "to", to, "host", s.Host)
+		return nil
+	}
+
+	// Standard STARTTLS / Unencrypted SMTP (Port 587 / 25 / 1025)
+	err := smtp.SendMail(addr, auth, s.From, []string{to}, []byte(msg))
 	if err != nil {
 		return fmt.Errorf("smtp send failed: %w", err)
 	}

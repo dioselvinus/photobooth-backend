@@ -14,6 +14,8 @@ type Config struct {
 	EmailProvider   string
 	SMTPHost        string
 	SMTPPort        string
+	SMTPUsername    string
+	SMTPPassword    string
 	SMTPFrom        string
 	ResendAPIKey    string
 	SendGridAPIKey  string
@@ -122,6 +124,8 @@ func LoadConfig() *Config {
 		EmailProvider:   emailProvider,
 		SMTPHost:        smtpHost,
 		SMTPPort:        smtpPort,
+		SMTPUsername:    os.Getenv("SMTP_USERNAME"),
+		SMTPPassword:    os.Getenv("SMTP_PASSWORD"),
 		SMTPFrom:        smtpFrom,
 		ResendAPIKey:    os.Getenv("RESEND_API_KEY"),
 		SendGridAPIKey: os.Getenv("SENDGRID_API_KEY"),
