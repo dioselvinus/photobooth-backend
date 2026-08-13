@@ -220,7 +220,7 @@ func (h *Handler) HandleGetGallery(w http.ResponseWriter, r *http.Request) {
 	session.DaysLeft = int(time.Until(session.CreatedAt.Add(galleryLifetime)).Hours() / 24)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := h.Tmpl.Execute(w, session); err != nil {
+	if err := h.Tmpl.ExecuteTemplate(w, "gallery.html", session); err != nil {
 		slog.Error("Template execution error", "session_code", code, "error", err)
 	}
 }
