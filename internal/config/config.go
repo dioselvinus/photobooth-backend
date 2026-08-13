@@ -9,6 +9,7 @@ type Config struct {
 	AppEnv          string
 	Port            string
 	DatabaseURL     string
+	DirectDatabaseURL string
 	BaseDomain      string
 	EmailProvider   string
 	SMTPHost        string
@@ -39,6 +40,11 @@ func LoadConfig() *Config {
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
 		dbURL = "postgres://postgres:postgres@localhost:5432/photobooth_local?sslmode=disable"
+	}
+
+	directDbURL := os.Getenv("DIRECT_DATABASE_URL")
+	if directDbURL == "" {
+		directDbURL = dbURL
 	}
 
 	baseDomain := os.Getenv("BASE_DOMAIN")
@@ -108,10 +114,11 @@ func LoadConfig() *Config {
 	}
 
 	return &Config{
-		AppEnv:          appEnv,
-		Port:            port,
-		DatabaseURL:     dbURL,
-		BaseDomain:      baseDomain,
+		AppEnv:            appEnv,
+		Port:              port,
+		DatabaseURL:       dbURL,
+		DirectDatabaseURL: directDbURL,
+		BaseDomain:        baseDomain,
 		EmailProvider:   emailProvider,
 		SMTPHost:        smtpHost,
 		SMTPPort:        smtpPort,

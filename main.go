@@ -18,6 +18,7 @@ import (
 	"photobooth-backend/internal/repository"
 	"photobooth-backend/internal/services"
 	"photobooth-backend/internal/storage"
+	"photobooth-backend/migrations"
 
 	"github.com/joho/godotenv"
 )
@@ -43,7 +44,18 @@ func main() {
 
 	slog.Info("Starting Photobooth Backend", "env", cfg.AppEnv, "port", cfg.Port)
 
-	db := database.NewPostgresDB(cfg.DatabaseURL)
+	// Run database migrations on direct connection (Session Pooler / Port 5432) - Single Responsibility Principle
+	if err := migrations.RunMigrationsDirect(cfg.DirectDatabaseURL); err != nil {
+		slog.Error("Failed to run database migrations", "error", err)
+		os.Exit(1)
+	}
+
+	// Initialize application database connection pool (Transaction Pooler / Port 6543)
+	db, err := database.NewPostgresDB(cfg.DatabaseURL)
+	if err != nil {
+		slog.Error("Failed to initialize database pool", "error", err)
+		os.Exit(1)
+	}
 	defer db.Close()
 
 	// Construct StoragePresigner using provider factory (Open-Closed Principle)

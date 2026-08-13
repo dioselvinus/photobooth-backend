@@ -5,35 +5,26 @@ import (
 	"log/slog"
 	"time"
 
-	"photobooth-backend/migrations"
-
 	_ "github.com/lib/pq"
 )
 
-func NewPostgresDB(connStr string) *sql.DB {
+func NewPostgresDB(connStr string) (*sql.DB, error) {
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		slog.Error("Failed to open database", "error", err)
-		panic(err)
+		return nil, err
 	}
 
-	db.SetMaxOpenConns(25)
+	db.SetMaxOpenConns(20)
 	db.SetMaxIdleConns(5)
 	db.SetConnMaxLifetime(5 * time.Minute)
 
 	if err := db.Ping(); err != nil {
-		slog.Error("Failed to ping database", "error", err)
-		panic(err)
+		_ = db.Close()
+		return nil, err
 	}
 
 	slog.Info("Successfully connected to PostgreSQL database")
-
-	if err := migrations.RunMigrations(db); err != nil {
-		slog.Error("Failed to run database migrations", "error", err)
-		panic(err)
-	}
-
-	return db
+	return db, nil
 }
 
 

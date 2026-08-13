@@ -81,3 +81,19 @@ func RunMigrations(db *sql.DB) error {
 	slog.Info("All database migrations verified and up to date")
 	return nil
 }
+
+// RunMigrationsDirect runs database migrations using a dedicated direct connection
+func RunMigrationsDirect(directConnStr string) error {
+	db, err := sql.Open("postgres", directConnStr)
+	if err != nil {
+		return fmt.Errorf("failed to open direct migration database connection: %w", err)
+	}
+	defer db.Close()
+
+	if err := db.Ping(); err != nil {
+		return fmt.Errorf("failed to ping direct migration database connection: %w", err)
+	}
+
+	slog.Info("Running database migrations via direct connection")
+	return RunMigrations(db)
+}
