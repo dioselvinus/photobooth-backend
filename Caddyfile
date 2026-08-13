@@ -1,9 +1,6 @@
 # Picorner Photobooth Backend with Dual-Domain Support
 
-picorner.app {
-    # Redirect to HTTPS
-    redir /https://picorner.app{scheme=https}{uri}
-}
+# Automatic HTTPS is handled by Caddy default
 
 # Route both domains to backend
 picorner.app, api.picorner.app {
