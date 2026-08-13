@@ -270,6 +270,20 @@ func (h *Handler) HandleGetSession(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// GET / (Root Home Page / Under Development)
+func (h *Handler) HandleLanding(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	if err := h.Tmpl.ExecuteTemplate(w, "index.html", nil); err != nil {
+		slog.Error("Landing page template execution error", "error", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
+}
+
+// Wildcard handler for unrecognized routes
+func (h *Handler) HandleNotFound(w http.ResponseWriter, r *http.Request) {
+	h.renderNotFound(w)
+}
+
 // renderNotFound serves the shared 404 page for unknown or expired galleries.
 func (h *Handler) renderNotFound(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")

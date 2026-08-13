@@ -81,7 +81,7 @@ func main() {
 	asyncMailer := services.NewAsyncEmailDispatcher(rawMailer, 100, 5)
 	defer asyncMailer.Stop()
 
-	tmpl, err := template.ParseFiles("templates/gallery.html", "templates/404.html", "templates/email_session.html")
+	tmpl, err := template.ParseFiles("templates/index.html", "templates/gallery.html", "templates/404.html", "templates/email_session.html")
 	if err != nil {
 		slog.Error("Failed to parse HTML templates", "error", err)
 		os.Exit(1)
@@ -96,6 +96,8 @@ func main() {
 	mux.HandleFunc("PATCH /api/sessions/{code}", h.HandleUpdateSession)
 	mux.HandleFunc("GET /s/{code}", h.HandleGetGallery)
 	mux.HandleFunc("GET /api/sessions/{code}", h.HandleGetSession)
+	mux.HandleFunc("GET /{$}", h.HandleLanding)
+	mux.HandleFunc("/", h.HandleNotFound)
 
 	// Apply Middleware Stack: CORS + Rate Limiter (20 requests/sec, burst capacity of 50)
 	rateLimiter := middleware.NewRateLimiter(20.0, 50.0)

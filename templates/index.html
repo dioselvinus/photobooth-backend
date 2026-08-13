@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PicCorner — Capturing Moments</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 30%, rgba(255, 56, 92, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .animate-pulse-slow {
+            animation: pulse-slow 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-[#fafafa] text-[#18181b] min-h-screen flex flex-col justify-between antialiased selection:bg-[#ff385c] selection:text-white">
+
+    <!-- Header / Brand -->
+    <header class="w-full max-w-6xl mx-auto px-6 py-8 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#ff385c] to-[#ff6b8b] flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-[#ff385c]/25">
+                📸
+            </div>
+            <span class="text-xl font-bold tracking-tight text-[#18181b]">PicCorner</span>
+        </div>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-700">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Systems Operational
+        </div>
+    </header>
+
+    <!-- Main Content / Hero -->
+    <main class="hero-gradient flex-1 flex flex-col items-center justify-center text-center px-6 py-12">
+        <div class="max-w-2xl mx-auto">
+            
+            <!-- Animated Floating Photo Icon -->
+            <div class="relative inline-block mb-8">
+                <div class="w-24 h-24 rounded-3xl bg-white shadow-2xl border border-zinc-100 flex items-center justify-center text-4xl animate-float">
+                    ⚡️
+                </div>
+                <div class="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-[#ff385c] text-white flex items-center justify-center text-sm font-bold shadow-md">
+                    ✨
+                </div>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-[#18181b] leading-[1.15] mb-4">
+                Something Awesome is <span class="bg-clip-text text-transparent bg-gradient-to-r from-[#ff385c] to-[#ff7b54]">Developing!</span>
+            </h1>
+
+            <p class="text-lg text-zinc-600 mb-8 max-w-lg mx-auto leading-relaxed">
+                PicCorner powers interactive photobooths across events. We're currently crafting an all-new web experience.
+            </p>
+
+            <!-- Playful Kiosk Session Prompt -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xl shadow-zinc-200/50 border border-zinc-100 max-w-md mx-auto text-left relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#ff385c] via-[#ff6b8b] to-[#ff7b54]"></div>
+                
+                <h2 class="text-sm font-bold uppercase tracking-wider text-zinc-400 mb-2">Looking for your photos?</h2>
+                <p class="text-sm text-zinc-600 mb-4">
+                    Scan the QR code printed on your photobooth strip or check your email for your personal gallery link.
+                </p>
+
+                <form onsubmit="event.preventDefault(); const code = document.getElementById('code').value.trim(); if(code) window.location.href = '/s/' + code;" class="flex gap-2">
+                    <input 
+                        type="text" 
+                        id="code"
+                        placeholder="Enter Code (e.g. A1B2C3D4)" 
+                        class="flex-1 px-4 py-3 text-sm bg-zinc-50 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff385c] focus:bg-white uppercase tracking-wider font-semibold transition"
+                        required
+                    />
+                    <button 
+                        type="submit" 
+                        class="px-5 py-3 text-sm font-semibold text-white bg-[#ff385c] hover:bg-[#e03150] rounded-xl transition shadow-md shadow-[#ff385c]/20 flex items-center justify-center gap-1.5 shrink-0"
+                    >
+                        View 🚀
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-6xl mx-auto px-6 py-8 border-t border-zinc-200/60 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 gap-4">
+        <p>© 2026 PicCorner. All rights reserved.</p>
+        <p class="flex items-center gap-1.5">
+            Powered by <strong class="text-zinc-700">PicCorner Backend</strong> • Keep on smiling!
+        </p>
+    </footer>
+
+</body>
+</html>
