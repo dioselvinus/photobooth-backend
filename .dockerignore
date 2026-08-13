@@ -1,0 +1,24 @@
+# Environment & secrets
+.env
+.env.production
+.env.local
+.env.*
+
+# Git & IDE
+.git
+.github
+.gitignore
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Test & Debug
+**/*_test.go
+__debug_bin
+
+# Build artifacts & logs
+dist/
+build/
+*.log
+tmp/

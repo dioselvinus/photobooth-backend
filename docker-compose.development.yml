@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: photobooth_pg
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: photobooth_local
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./migrations/000001_create_photobooth_sessions.up.sql:/docker-entrypoint-initdb.d/01-init.sql
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: photobooth_mailpit
+    ports:
+      - "8025:8025" # Web UI dashboard
+      - "1025:1025" # SMTP server
+    environment:
+      MP_MAX_MESSAGES: 500
+
+  minio:
+    image: minio/minio
+    container_name: photobooth_minio
+    ports:
+      - "9000:9000" # S3 API port
+      - "9001:9001" # MinIO Console Web UI
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - miniodata:/data
+
+volumes:
+  pgdata:
+  miniodata:

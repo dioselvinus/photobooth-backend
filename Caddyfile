@@ -1,0 +1,11 @@
+# Picorner Photobooth Backend with Dual-Domain Support
+
+picorner.app {
+    # Redirect to HTTPS
+    redir /https://picorner.app{scheme=https}{uri}
+}
+
+# Route both domains to backend
+picorner.app, api.picorner.app {
+    reverse_proxy app:8080
+}
