@@ -12,6 +12,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  # Force lowercasing on repository name for GHCR compliance
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
@@ -45,9 +46,12 @@ jobs:
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=semver,pattern={{version}}
             type=sha,prefix=
+          # Force lowercase output for tags to prevent capitalization mismatch
+          flavor: |
+            lower=true
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
