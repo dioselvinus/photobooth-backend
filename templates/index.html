@@ -74,30 +74,17 @@
                 PicCorner powers interactive photobooths across events. We're currently crafting an all-new web experience.
             </p>
 
-            <!-- Playful Kiosk Session Prompt -->
-            <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xl shadow-zinc-200/50 border border-zinc-100 max-w-md mx-auto text-left relative overflow-hidden">
+            <!-- Privacy notice for sessions -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xl shadow-zinc-200/50 border border-zinc-100 max-w-md mx-auto text-center relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#ff385c] via-[#ff6b8b] to-[#ff7b54]"></div>
                 
-                <h2 class="text-sm font-bold uppercase tracking-wider text-zinc-400 mb-2">Looking for your photos?</h2>
-                <p class="text-sm text-zinc-600 mb-4">
-                    Scan the QR code printed on your photobooth strip or check your email for your personal gallery link.
+                <div class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-zinc-100 flex items-center justify-center text-xl">
+                    🔒
+                </div>
+                <h2 class="text-base font-bold text-zinc-900 mb-1">Private Galleries</h2>
+                <p class="text-sm text-zinc-600 leading-relaxed">
+                    To access your photobooth photos, please use the direct link sent to your email or scan the QR code printed on your photo strip.
                 </p>
-
-                <form onsubmit="event.preventDefault(); const code = document.getElementById('code').value.trim(); if(code) window.location.href = '/s/' + code;" class="flex gap-2">
-                    <input 
-                        type="text" 
-                        id="code"
-                        placeholder="Enter Code (e.g. A1B2C3D4)" 
-                        class="flex-1 px-4 py-3 text-sm bg-zinc-50 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff385c] focus:bg-white uppercase tracking-wider font-semibold transition"
-                        required
-                    />
-                    <button 
-                        type="submit" 
-                        class="px-5 py-3 text-sm font-semibold text-white bg-[#ff385c] hover:bg-[#e03150] rounded-xl transition shadow-md shadow-[#ff385c]/20 flex items-center justify-center gap-1.5 shrink-0"
-                    >
-                        View 🚀
-                    </button>
-                </form>
             </div>
 
         </div>
