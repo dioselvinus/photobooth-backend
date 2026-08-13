@@ -1,0 +1,27 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.production.example
+
+# Binaries and build artifacts
+bin/
+*.exe
+*.exe;
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/main
+
+# OS & IDE files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker / Local temporary files
+tmp/
+scratch/
